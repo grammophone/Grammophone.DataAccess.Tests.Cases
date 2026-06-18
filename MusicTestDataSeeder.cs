@@ -30,7 +30,7 @@ namespace Grammophone.DataAccess.Tests.Cases
 			var track = domainContainer.Create<Track>();
 			track.Name = TestData.TrackName;
 			track.Number = 1;
-			track.DurationSeconds = 245;
+			track.DurationSeconds = TestData.TrackDurationSeconds;
 			track.Album = album;
 			track.Genre = genre;
 
