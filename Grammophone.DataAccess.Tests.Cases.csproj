@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{4D8D9486-C71B-4D8E-A76B-44D693787458}</ProjectGuid>
+    <TargetFrameworks>net472;net8.0</TargetFrameworks>
+    <AssemblyTitle>Grammophone.DataAccess.Tests.Cases</AssemblyTitle>
+    <Product>Grammophone.DataAccess.Tests.Cases</Product>
+    <Copyright>Copyright ©  2016</Copyright>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Grammophone.DataAccess.Tests.Cases.XML</DocumentationFile>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Grammophone.DataAccess\Grammophone.DataAccess.csproj" />
+    <ProjectReference Include="..\Grammophone.DataAccess.Tests.Domain\Grammophone.DataAccess.Tests.Domain.csproj" />
+  </ItemGroup>
+</Project>
