@@ -14,7 +14,7 @@ namespace Grammophone.DataAccess.Tests.Cases
 		/// Create a domain container for a test case.
 		/// </summary>
 		/// <returns>Returns the test domain container.</returns>
-		protected abstract ITestDomainContainer CreateDomainContainer();
+		protected abstract IMusicDomainContainer CreateDomainContainer();
 
 		/// <summary>
 		/// Verifies that a provider-specific test project can create a test domain container.
