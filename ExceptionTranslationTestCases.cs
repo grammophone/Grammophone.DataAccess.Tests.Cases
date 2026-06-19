@@ -1,3 +1,5 @@
+using System.Linq;
+using Grammophone.DataAccess.Tests.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Grammophone.DataAccess.Tests.Cases
@@ -11,12 +13,37 @@ namespace Grammophone.DataAccess.Tests.Cases
 		#region Public methods
 
 		/// <summary>
-		/// Placeholder for provider-independent exception translation tests.
+		/// Tests translation of unique constraint violations.
 		/// </summary>
 		[TestMethod]
-		[Ignore("Database setup and constraint scenarios will be added in the next test iteration.")]
-		public void Exception_translation_tests_are_pending()
+		public void Duplicate_artist_name_throws_unique_constraint_violation()
 		{
+			using (var domainContainer = CreateDomainContainer())
+			{
+				var artist = domainContainer.Create<Artist>();
+				artist.Name = TestData.ArtistName;
+
+				domainContainer.Artists.Add(artist);
+
+				Assert.ThrowsException<UniqueConstraintViolationException>(() => domainContainer.SaveChanges());
+			}
+		}
+
+		/// <summary>
+		/// Tests translation of referential constraint violations.
+		/// </summary>
+		[TestMethod]
+		public void Deleting_album_with_tracks_throws_referential_constraint_violation()
+		{
+			using (var domainContainer = CreateDomainContainer())
+			{
+				var album = domainContainer.Albums
+					.Single(a => a.Name == TestData.AlbumName);
+
+				domainContainer.Albums.Remove(album);
+
+				Assert.ThrowsException<ReferentialConstraintViolationException>(() => domainContainer.SaveChanges());
+			}
 		}
 
 		#endregion
