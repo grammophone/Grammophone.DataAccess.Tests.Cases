@@ -175,6 +175,33 @@ namespace Grammophone.DataAccess.Tests.Cases
 			}
 		}
 
+		/// <summary>
+		/// Tests dictionary materialization with an async terminal method.
+		/// </summary>
+		[TestMethod]
+		public async Task ToDictionaryAsync_with_key_selector_materializes_dictionary()
+		{
+			using (var domainContainer = CreateDomainContainer())
+			{
+				var tracks = await domainContainer.Tracks.ToListAsync();
+				var tracksByName = await domainContainer.Tracks.ToDictionaryAsync(t => t.Name);
+
+				Assert.AreEqual(tracks.Count, tracksByName.Count);
+				Assert.IsTrue(tracksByName.ContainsKey(TestData.TrackName));
+
+				foreach (var track in tracks)
+				{
+					Assert.IsTrue(tracksByName.ContainsKey(track.Name));
+					Assert.AreEqual(track.ID, tracksByName[track.Name].ID);
+				}
+
+				var seededTrack = tracksByName[TestData.TrackName];
+
+				Assert.AreEqual(TestData.TrackName, seededTrack.Name);
+				Assert.AreEqual(TestData.TrackDurationSeconds, seededTrack.DurationSeconds);
+			}
+		}
+
 		#endregion
 	}
 }
