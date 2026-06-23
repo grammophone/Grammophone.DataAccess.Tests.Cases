@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Threading.Tasks;
+using Grammophone.DataAccess.QueryExtensions;
 using Grammophone.DataAccess.Tests.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -43,6 +45,22 @@ namespace Grammophone.DataAccess.Tests.Cases
 				domainContainer.Albums.Remove(album);
 
 				Assert.ThrowsException<ReferentialConstraintViolationException>(() => domainContainer.SaveChanges());
+			}
+		}
+
+		/// <summary>
+		/// Tests translation of referential constraint violations from set-based deletion.
+		/// </summary>
+		[TestMethod]
+		public async Task ExecuteDeleteAsync_album_with_tracks_throws_referential_constraint_violation()
+		{
+			using (var domainContainer = CreateDomainContainer())
+			{
+				var albums = domainContainer.Albums
+					.Where(a => a.Name == TestData.AlbumName);
+
+				await Assert.ThrowsExceptionAsync<ReferentialConstraintViolationException>(
+					async () => await albums.ExecuteDeleteAsync());
 			}
 		}
 
