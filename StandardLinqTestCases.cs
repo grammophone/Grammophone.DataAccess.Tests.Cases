@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Grammophone.DataAccess.Tests.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -170,6 +171,53 @@ namespace Grammophone.DataAccess.Tests.Cases
 					.Sum(t => (int?)t.DurationSeconds);
 
 				Assert.IsTrue(totalDuration == null || totalDuration == 0);
+			}
+		}
+
+		/// <summary>
+		/// Tests dictionary materialization with a standard terminal method.
+		/// </summary>
+		[TestMethod]
+		public void ToDictionary_with_key_selector_materializes_dictionary()
+		{
+			using (var domainContainer = CreateDomainContainer())
+			{
+				var tracks = domainContainer.Tracks.ToList();
+				var tracksByName = domainContainer.Tracks.ToDictionary(t => t.Name);
+
+				Assert.AreEqual(tracks.Count, tracksByName.Count);
+				Assert.IsTrue(tracksByName.ContainsKey(TestData.TrackName));
+
+				foreach (var track in tracks)
+				{
+					Assert.IsTrue(tracksByName.ContainsKey(track.Name));
+					Assert.AreEqual(track.ID, tracksByName[track.Name].ID);
+				}
+
+				var seededTrack = tracksByName[TestData.TrackName];
+
+				Assert.AreEqual(TestData.TrackName, seededTrack.Name);
+				Assert.AreEqual(TestData.TrackDurationSeconds, seededTrack.DurationSeconds);
+			}
+		}
+
+		/// <summary>
+		/// Tests dictionary materialization with a standard terminal method.
+		/// </summary>
+		[TestMethod]
+		public void ToDictionary_with_key_and_value_selectors_materializes_dictionary()
+		{
+			using (var domainContainer = CreateDomainContainer())
+			{
+				var tracks = domainContainer.Tracks.ToList();
+				var trackDurationsByName = domainContainer.Tracks.ToDictionary(t => t.Name, t => t.DurationSeconds);
+
+				Assert.AreEqual(tracks.Count, trackDurationsByName.Count);
+				Assert.IsTrue(trackDurationsByName.ContainsKey(TestData.TrackName));
+
+				var seededTrackDuration = trackDurationsByName[TestData.TrackName];
+
+				Assert.AreEqual(TestData.TrackDurationSeconds, seededTrackDuration);
 			}
 		}
 
